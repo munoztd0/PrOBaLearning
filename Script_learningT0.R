@@ -1,10 +1,11 @@
-    ## R code for FOR PROBA LEARNING TASK OBIWAN
+ 
+
+   ## R code for FOR PROBA LEARNING TASK OBIWAN
     # last modified on April 2020 by David MUNOZ TORD
     #invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
     # PRELIMINARY STUFF ----------------------------------------
     if(!require(pacman)) {
-      install.packages("pacman", "devtools")
-      library(devtools)
+      install.packages("pacman")
       library(pacman)
     }
     
@@ -89,20 +90,22 @@
     k1 = 2
     subj = unique(dataclean$subjID)
     alpha = c(); beta = c(); nll= c(); ID = c(); group = c(); trials = c()
-    LB = c(0, 0); UB = c(1, 10) # parameters lower and upper bounds
+    LB = c(0, 0); UB = c(1, 50) # parameters lower and upper bounds
     for (s in subj) {
       data = subset(dataclean, subjID == s)
       param_rep = c(); nll_rep = c()
       for (i in  1:Nrep) {
-        x0 = c(rand(), 10*rand()); #different parameter initial values to avoid local minima
+        x0 = c(rand(), 50*rand()); #different parameter initial values to avoid local minima
         f = fmincon(x0=x0,fn=PST_q, data = data, lb = LB, ub = UB) #optimize
         param_rep = rbind(param_rep, f$par); nll_rep = rbind(nll_rep, f$value)
       }
       pos = which.min(nll_rep)
-      alpha = rbind(alpha,param_rep[pos,1]); beta = rbind(beta,param_rep[pos,2]); nll = rbind(nll,nll_rep[pos]); ID = rbind(ID,s); group = rbind(group, ifelse(s > 199, 'obese', 'lean')); trials = rbind(trials,length(data$subjID))
+      browser()
+      # alpha = rbind(alpha,param_rep[pos,1]); beta = rbind(beta,param_rep[pos,2]); nll = rbind(nll,nll_rep[pos]); ID = rbind(ID,s); group = rbind(group, ifelse(s > 199, 'obese', 'lean')); trials = rbind(trials,length(data$subjID))
       print(paste('done subj', s))
     }
     
+    browser()
     df1 = cbind(ID, alpha, beta, nll, group, trials)
     colnames(df1) = c('ID', 'alpha', 'beta', 'nll', 'group', 'trial'); 
     df1 = as_tibble(df1); df1$group = as.factor(df1$group); df1$ID =as.factor(df1$ID)
@@ -115,12 +118,12 @@
     k2 = 3 # number of free parameteres
     subj = unique(dataclean$subjID)
     alphaG = c(); alphaL = c(); beta = c(); nll= c(); ID = c(); group = c(); trials = c()
-    LB = c(0, 0, 0); UB = c(1, 1, 10) # parameters lower and upper bounds
+    LB = c(0, 0, 0); UB = c(1, 1, 50) # parameters lower and upper bounds
     for (s in subj) {
       data = subset(dataclean, subjID == s)
       param_rep = c(); nll_rep = c()
       for (i in  1:Nrep) {
-        x0 = c(rand(), rand(), 10*rand()); #different parameter initial values to avoid local minima
+        x0 = c(rand(), rand(), 50*rand()); #different parameter initial values to avoid local minima
         f = fmincon(x0=x0,fn=PST_q_dual, data = data, lb = LB, ub = UB) #optimize
         param_rep = rbind(param_rep, f$par); nll_rep = rbind(nll_rep, f$value)
       }
