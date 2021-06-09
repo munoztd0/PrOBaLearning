@@ -12,7 +12,7 @@ if(!require(tidyBF)) {
   library(tidyBF)
 }
 
-pacman::p_load(tidyverse, plyr,dplyr,readr, car, BayesFactor, sjmisc, effectsize) #whatchout to have tidyBF 0.3.0
+pacman::p_load(tidyverse, plyr, dplyr,readr, car, BayesFactor, sjmisc, effectsize) #whatchout to have tidyBF 0.3.0
 
 # SETUP ------------------------------------------------------------------
 
